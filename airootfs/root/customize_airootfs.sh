@@ -3,7 +3,7 @@
 set -e -u
 
 sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
-sed -i 's/#\(zn_CN\.UTF-8\)/\1/' /etc/locale.gen
+sed -i 's/#\(zh_CN\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
 
 ln -sf /usr/share/zoneinfo/UTC /etc/localtime
