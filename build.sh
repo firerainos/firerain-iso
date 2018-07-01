@@ -4,13 +4,14 @@ set -e -u
 
 iso_name=firerainlinux
 iso_label="FIRERAIN_$(date +%Y%m)"
+iso_publisher="FireRainOS <https://www.firerain.xyz>"
+iso_application="FireRainOS Live/Rescue CD"
 iso_version=$(date +%Y.%m.%d)
 install_dir=arch
 work_dir=work
 out_dir=out
 gpg_key=
 
-arch=$(uname -m)
 verbose=""
 script_path=$(readlink -f ${0%/*})
 
@@ -27,6 +28,10 @@ _usage ()
     echo "                        Default: ${iso_version}"
     echo "    -L <iso_label>     Set an iso label (disk label)"
     echo "                        Default: ${iso_label}"
+    echo "    -P <publisher>     Set a publisher for the disk"
+    echo "                        Default: '${iso_publisher}'"
+    echo "    -A <application>   Set an application name for the disk"
+    echo "                        Default: '${iso_application}'"
     echo "    -D <install_dir>   Set an install_dir (directory inside iso)"
     echo "                        Default: ${install_dir}"
     echo "    -w <work_dir>      Set the working directory"
@@ -91,6 +96,8 @@ make_setup_mkinitcpio() {
 # Customize installation (airootfs)
 make_customize_airootfs() {
     cp -af ${script_path}/airootfs ${work_dir}/x86_64
+
+    cp ${script_path}/pacman.conf ${work_dir}/x86_64/airootfs/etc
 
     curl -o ${work_dir}/x86_64/airootfs/etc/pacman.d/mirrorlist 'https://www.archlinux.org/mirrorlist/?country=all&protocol=http&use_mirror_status=on'
 
@@ -205,12 +212,12 @@ make_prepare() {
     mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" pkglist
     mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" ${gpg_key:+-g ${gpg_key}} prepare
     rm -rf ${work_dir}/airootfs
-    # rm -rf ${work_dir}/${arch}/airootfs (if low space, this helps)
+    # rm -rf ${work_dir}/x86_64/airootfs (if low space, this helps)
 }
 
 # Build ISO
 make_iso() {
-    mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -o "${out_dir}" iso "${iso_name}-${iso_version}-x86_64.iso"
+    mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -P "${iso_publisher}" -A "${iso_application}" -o "${out_dir}" iso "${iso_name}-${iso_version}-x86_64.iso"
 }
 
 if [[ ${EUID} -ne 0 ]]; then
@@ -218,11 +225,13 @@ if [[ ${EUID} -ne 0 ]]; then
     _usage 1
 fi
 
-while getopts 'N:V:L:D:w:o:g:vh' arg; do
+while getopts 'N:V:L:P:A:D:w:o:g:vh' arg; do
     case "${arg}" in
         N) iso_name="${OPTARG}" ;;
         V) iso_version="${OPTARG}" ;;
         L) iso_label="${OPTARG}" ;;
+        P) iso_publisher="${OPTARG}" ;;
+        A) iso_application="${OPTARG}" ;;
         D) install_dir="${OPTARG}" ;;
         w) work_dir="${OPTARG}" ;;
         o) out_dir="${OPTARG}" ;;
