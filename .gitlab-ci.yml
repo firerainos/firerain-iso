@@ -6,13 +6,15 @@ before_script:
 stages:
   - build
 
-build-firerain-iso:
-  stage: build
+pages:
   script:
-    - ./build.sh -v
-    - ls out
-
+    - ./build.sh
+    - cd out
+    - md5sum *.iso > md5sum.txt
+    - sha1sum *.iso > sha1sum.txt  
   artifacts:
     name: "firerain-iso"
     paths:
-      - $CI_PROJECT_DIR/out
+      - out
+  only:
+    - master
