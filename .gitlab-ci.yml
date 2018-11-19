@@ -11,6 +11,11 @@ pages:
     - cd public
     - md5sum *.iso > md5sum.txt
     - sha1sum *.iso > sha1sum.txt
+    - echo "<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>firerain-iso</title></head><body>" > index.html
+    - echo "<a href='firerainlinux-$(date +%Y.%m.%d)-x86_64.iso'>firerainlinux-$(date +%Y.%m.%d)-x86_64.iso</a><br>" >> index.html
+    - echo "<a href='md5sum.txt'>md5sum.txt</a><br>" >> index.html
+    - echo "<a href='sha1sum.txt'>sha1sum.txt</a><br>" >> index.html
+    - echo "</body></html>" >> index.html
   artifacts:
     name: "firerain-iso"
     paths:
