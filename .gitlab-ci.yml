@@ -4,6 +4,7 @@ before_script:
   - pacman -Sy archiso --noconfirm
 
 pages:
+  stage: deploy
   script:
     - ./build.sh
     - cd out
