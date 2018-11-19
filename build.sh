@@ -175,6 +175,10 @@ make_efiboot() {
     mkdir -p ${work_dir}/iso/EFI/archiso
     truncate -s 64M ${work_dir}/iso/EFI/archiso/efiboot.img
     mkfs.fat -n FIRERAINISO_EFI ${work_dir}/iso/EFI/archiso/efiboot.img
+    
+    if [[ ! -e /dev/loop0 ]]; then
+        mknod /dev/loop0 b 7 0
+    fi
 
     mkdir -p ${work_dir}/efiboot
     mount ${work_dir}/iso/EFI/archiso/efiboot.img ${work_dir}/efiboot
