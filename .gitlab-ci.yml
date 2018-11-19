@@ -2,9 +2,6 @@ image: base/devel
 
 before_script:
   - pacman -Sy archiso --noconfirm
-  
-stages:
-  - build
 
 pages:
   script:
