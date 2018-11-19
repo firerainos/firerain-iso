@@ -1,0 +1,18 @@
+image: base/devel
+
+before_script:
+  - pacman -Sy archiso --noconfirm
+  
+stages:
+  - build
+
+build-firerain-iso:
+  stage: build
+  script:
+    - ./build.sh -v
+    - ls out
+
+  artifacts:
+    name: "firerain-iso"
+    paths:
+      - $CI_PROJECT_DIR/out
