@@ -1,7 +1,7 @@
-image: base/devel
+image: archlinux/base
 
 before_script:
-  - pacman -Sy archiso --noconfirm
+  - pacman -Sy base-devel archiso --noconfirm
 
 pages:
   stage: deploy
